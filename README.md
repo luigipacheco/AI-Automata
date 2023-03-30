@@ -6,7 +6,7 @@ AI Automata is a real-time strategy game inspired by Globulation 2, with a uniqu
 
 ### Node-Based Visual Scripting Language
 
-AI Automata features a node-based visual scripting language, where each node is programmable and customizable. The nodes represent different units, structures, and programming functions, and can be connected to create complex logic flows. The player can program the behavior and capabilities of each unit, such as movement, combat, and special abilities.
+AI Automata features a node-based visual scripting language, where each node is programmable and customizable. The nodes represent either different units, structures or programming functions, and can be connected to create complex logic flows. The player can program the behavior and capabilities of each unit, such as movement, combat, and special abilities.
 
 ### Resource Management
 
