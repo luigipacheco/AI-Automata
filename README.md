@@ -32,12 +32,6 @@ Each blob can evolve into a building, with each building keeping some of the pro
 
 The node editor window includes programming challenges and tutorials, providing guidance and tips for players who are new to programming or who are looking to improve their programming skills.
 
-## Getting Started
-
-1. Clone the repository.
-2. Install Godot Engine and open the project file.
-3. Run the game and start programming your units!
-
 ## Contributing
 
 Contributions are welcome! Feel free to submit bug reports, feature requests, or pull requests to help improve the game.
