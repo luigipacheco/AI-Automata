@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
-import random
-import math
+from blob import Blob
+from commands import process_command
 
 pygame.init()
 
@@ -10,16 +10,6 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("Autonomous Blob")
 
 manager = pygame_gui.UIManager(WINDOW_SIZE)
-
-class Blob:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.size = 20
-        self.color = (255, 0, 0)
-        self.speed = 10
-        self.direction = random.randint(0, 360)
-        self.vision_radius = 100
 
 blob = Blob(WINDOW_SIZE[0] / 2, WINDOW_SIZE[1] / 2)
 
@@ -31,10 +21,12 @@ button_parse = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((360, 400)
 clock = pygame.time.Clock()
 running = True
 
-# Command delay variable and timer event
-command_delay = 1000  # in milliseconds
+command_delay = 1000
 command_timer_event = pygame.USEREVENT + 1
 command_queue = []
+current_command_index = -1  # Add this line before the while loop
+
+font = pygame.font.Font(None, 24)
 
 while running:
     time_delta = clock.tick(60) / 1000.0
@@ -52,43 +44,10 @@ while running:
                     if not pygame.time.get_ticks():
                         pygame.time.set_timer(command_timer_event, command_delay)
 
-        # Process the command queue with delay between commands
         if event.type == command_timer_event:
             if command_queue:
                 word = command_queue.pop(0).lower()
-
-                # Process commands here
-                if word == 'forward':
-                    dx = blob.speed * math.cos(math.radians(blob.direction))
-                    dy = blob.speed * math.sin(math.radians(blob.direction))
-                    blob.x += dx
-                    blob.y += dy
-                elif word == 'back':
-                    dx = blob.speed * math.cos(math.radians(blob.direction))
-                    dy = blob.speed * math.sin(math.radians(blob.direction))
-                    blob.x -= dx
-                    blob.y -= dy
-                elif word == 'left':
-                    blob.direction -= 90
-                elif word == 'right':
-                    blob.direction += 90
-                elif word == 'speed':
-                    if command_queue:
-                        speed = int(command_queue.pop(0))
-                        blob.speed = speed
-                elif word == 'color':
-                    if command_queue:
-                        color = command_queue.pop(0)
-                        if color == 'red':
-                            blob.color = (255, 0, 0)
-                        elif color == 'green':
-                            blob.color = (0, 255, 0)
-                        elif color == 'blue':
-                            blob.color = (0, 0, 255)
-                        elif color == 'black':
-                            blob.color = (0, 0, 0)
-                        elif color == 'gray':
-                            blob.color = (100, 100, 100)
+                process_command(blob, word, command_queue)
 
                 if not command_queue:
                     pygame.time.set_timer(command_timer_event, 0)
@@ -100,6 +59,16 @@ while running:
     manager.update(time_delta)
 
     screen.fill((255, 255, 255))
+
+     # Draw command queue and marker for the currently running command
+    y_offset = 10
+    for index, cmd in enumerate(command_queue):
+        if index == current_command_index:
+            cmd_text = font.render(f"> {cmd}", True, (0, 0, 0))
+        else:
+            cmd_text = font.render(cmd, True, (0, 0, 0))
+        screen.blit(cmd_text, (10, y_offset))
+        y_offset += 30
     pygame.draw.circle(screen, blob.color, (int(blob.x), int(blob.y)), blob.size)
     manager.draw_ui(screen)
 
